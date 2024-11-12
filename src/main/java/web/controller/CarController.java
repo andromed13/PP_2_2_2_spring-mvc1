@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import web.model.Car;
+import web.service.CarService;
 import web.service.CarServiceImpl;
 
 import java.util.ArrayList;
@@ -17,21 +18,17 @@ import java.util.List;
 @RequestMapping(value = "/cars")
 public class CarController {
 
-    private final CarServiceImpl carService;
+    private final CarService carService;
 
-    public CarController(CarServiceImpl carService) {
+    @Autowired
+    public CarController(CarService carService) {
         this.carService = carService;
     }
 
-    @GetMapping("")
+    @GetMapping
     public String cars(
-            @RequestParam(name = "count", required = false, defaultValue = "0")
-            int count, Model model) {
-        if (count > 0 && count <5) {
+            @RequestParam(name = "count", required = false, defaultValue = "0") int count, Model model) {
             model.addAttribute("cars", carService.limitCars(count));
-        } else {
-            model.addAttribute("cars", carService.allCars());
-        }
         return "cars";
     }
 }
